@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: solocoach
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask --app app run --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: FLASK_SECRET
+        value: change-me
+      - key: TZ
+        value: Africa/Ceuta
+      - key: HOME_CITY_PALMA
+        value: Palma de Mallorca
+      - key: HOME_CITY_MADRID
+        value: Madrid
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
