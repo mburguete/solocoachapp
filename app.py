@@ -24,8 +24,8 @@ TZ = pytz.timezone(TZ_NAME)
 CITY_PALMA = os.getenv('HOME_CITY_PALMA','Palma de Mallorca')
 CITY_MADRID = os.getenv('HOME_CITY_MADRID','Madrid')
 
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+TELEGRAM_BOT_TOKEN = os.getenv(8418506074:AAEMAqSivC6VIVOj12kARJ0Cd1E27gtNABg)
+TELEGRAM_CHAT_ID = os.getenv(@Solocoach_mBot)
 
 # --- Models ---
 class Flight(db.Model):
