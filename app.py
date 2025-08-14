@@ -9,7 +9,11 @@ import requests
 from ics import Calendar, Event
 
 load_dotenv()
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(__file__)
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+)
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET','dev-secret')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///solocoach.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
