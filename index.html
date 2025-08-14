@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid">
+  <section class="card">
+    <h3>Today's Plan — {{ plan.city }}</h3>
+    {% if plan.weather.temp %}
+      <p class="muted">Weather now: {{ plan.weather.temp }}°C, wind {{ plan.weather.wind }} km/h</p>
+    {% endif %}
+    <ol>
+      {% for blk in plan.schedule %}
+        <li>
+          <strong>{{ blk.start|hm }}–{{ blk.end|hm }}</strong> — {{ blk.title }}
+          {% if blk.desc %}<br><span class="muted">{{ blk.desc }}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    <a href="{{ url_for('plan_ics') }}" role="button">Add to Calendar (.ics)</a>
+  </section>
+  <section class="card">
+    <h3>Daily Streak</h3>
+    <form method="post" action="{{ url_for('streak_update') }}">
+      <fieldset>
+        <label><input type="checkbox" name="training" {% if streak and streak.training %}checked{% endif %}> Training</label><br>
+        <label><input type="checkbox" name="protein" {% if streak and streak.protein %}checked{% endif %}> Protein + Creatine</label><br>
+        <label><input type="checkbox" name="deepwork" {% if streak and streak.deepwork %}checked{% endif %}> Deep Work</label>
+      </fieldset>
+      <button type="submit">Save</button>
+    </form>
+  </section>
+</div>
+
+<div class="grid" style="margin-top:1rem">
+  <section class="card">
+    <h3>Flights</h3>
+    <form method="post" action="{{ url_for('flight_new') }}">
+      <div class="grid" style="grid-template-columns: repeat(2,1fr)">
+        <label>From<input name="depart_city" required></label>
+        <label>To<input name="arrive_city" required></label>
+        <label>Depart (ISO)<input name="depart_time" placeholder="2025-08-15T07:30" required></label>
+        <label>Arrive (ISO)<input name="arrive_time" placeholder="2025-08-15T09:00" required></label>
+      </div>
+      <label>Note<input name="note" placeholder="e.g., IB1234 window seat"></label>
+      <button type="submit">Add Flight</button>
+    </form>
+    <ul>
+      {% for f in flights %}
+        <li>{{ f.depart_city }} → {{ f.arrive_city }} — {{ f.depart_time }} → {{ f.arrive_time }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <h3>Airport / Side-Project Tasks</h3>
+    <form method="post" action="{{ url_for('task_new') }}">
+      <label>Title <input name="title" required></label>
+      <div class="grid" style="grid-template-columns: repeat(3,1fr)">
+        <label>Context
+          <select name="context">
+            <option value="airport">airport</option>
+            <option value="home">home</option>
+            <option value="any" selected>any</option>
+          </select>
+        </label>
+        <label>Minutes <input type="number" name="minutes" value="45"></label>
+        <label>Project <input name="project" value="Side Project"></label>
+      </div>
+      <button type="submit">Add Task</button>
+    </form>
+    <p class="muted">Tasks are packed into pre-boarding or layover slots automatically.</p>
+    <ul>
+      {% for t in tasks %}
+        <li><span class="chip">{{ t.context }}</span> {{ t.title }} — {{ t.minutes }} min</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+<section class="card" style="margin-top:1rem">
+  <h3>Automation Endpoints (for cron)</h3>
+  <ul>
+    <li><code>/cron/morning</code> — sends Telegram "Today's plan" at 07:00</li>
+    <li><code>/cron/evening</code> — sends Telegram check-in at 21:00</li>
+  </ul>
+  <p class="muted">On Render/Railway, add cron to hit these at local times.</p>
+</section>
+{% endblock %}
