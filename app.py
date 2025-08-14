@@ -215,16 +215,28 @@ def task_new():
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/plan/ics')
+@app.route("/plan/ics")
 def plan_ics():
-    today = datetime.now(TZ).date()
-    plan = generate_plan(today)
-    cal = schedule_to_ics(plan)
-import os
+    from ics import Calendar, Event
+    from datetime import datetime
+    import pytz
+
+    tz = pytz.timezone(os.getenv("TZ", "Africa/Ceuta"))
+    now = datetime.now(tz)
+
+    c = Calendar()
+    e = Event()
+    e.name = "SoloCoach Plan"
+    e.begin = now
+    e.end = now.replace(hour=23, minute=59)
+    c.events.add(e)
+
     path = os.path.join(os.path.dirname(__file__), 'plan.ics')
-    with open(path,'w') as f:
-        f.writelines(cal)
-    return send_file(path, as_attachment=True, download_name='today_plan.ics')
+    with open(path, 'w') as f:
+        f.writelines(c)
+
+    return send_file(path, as_attachment=True, download_name='plan.ics')
+
 
 @app.route('/cron/morning')
 def cron_morning():
