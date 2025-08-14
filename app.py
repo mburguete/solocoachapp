@@ -220,7 +220,7 @@ def plan_ics():
     today = datetime.now(TZ).date()
     plan = generate_plan(today)
     cal = schedule_to_ics(plan)
-   import os
+import os
     path = os.path.join(os.path.dirname(__file__), 'plan.ics')
     with open(path,'w') as f:
         f.writelines(cal)
