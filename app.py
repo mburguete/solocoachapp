@@ -220,7 +220,8 @@ def plan_ics():
     today = datetime.now(TZ).date()
     plan = generate_plan(today)
     cal = schedule_to_ics(plan)
-    path = '/mnt/data/plan.ics'
+   import os
+    path = os.path.join(os.path.dirname(__file__), 'plan.ics')
     with open(path,'w') as f:
         f.writelines(cal)
     return send_file(path, as_attachment=True, download_name='today_plan.ics')
